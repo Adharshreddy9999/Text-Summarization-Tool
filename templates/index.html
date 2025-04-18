@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Summarization Tool</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 20px;
+      }
+      textarea {
+        width: 100%;
+        min-height: 200px;
+        padding: 10px;
+        margin: 10px 0;
+        font-size: 16px;
+        line-height: 1.5;
+      }
+      .form-row {
+        margin: 20px 0;
+      }
+      label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+      }
+      select, input {
+        padding: 5px;
+        font-size: 16px;
+      }
+      button {
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+      }
+      .summary-section {
+        margin-top: 30px;
+        border-top: 1px solid #ccc;
+        padding-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <h1>Text Summarization Tool</h1>
+      <form method="POST" action="/" id="summarize-form">
+        <div class="form-row">
+          <label for="input_text">Enter your text to summarize:</label>
+          <textarea 
+            name="input_text" 
+            id="input_text" 
+            placeholder="Enter your text"
+            required>{{ input_text | default('') }}</textarea>
+        </div>
+        <div class="form-row">
+          <label for="no_sentences">Number of sentences:</label>
+          <input 
+            type="number" 
+            name="no_sentences" 
+            id="no_sentences" 
+            min="1" 
+            max="10" 
+            value="{{ no_sentences }}"
+            required>
+        </div>
+        <div class="form-row">
+          <label for="format_type">Format:</label>
+          <select name="format_type" id="format_type">
+            <option value="paragraph" {% if format_type == 'paragraph' %}selected{% endif %}>Paragraph</option>
+            <option value="bullets" {% if format_type == 'bullets' %}selected{% endif %}>Bullet Points</option>
+            <option value="numbered" {% if format_type == 'numbered' %}selected{% endif %}>Numbered List</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <button type="submit">Generate Summary</button>
+        </div>
+      </form>
+      {% if summary %}
+      <div class="summary-section">
+        <h2>Summary</h2>
+        <form method="POST" action="/">
+          <div class="form-row">
+            <textarea 
+              name="input_text" 
+              id="summary" 
+              style="min-height: 150px;">{{ summary }}</textarea>
+          </div>
+          <div class="form-row">
+            <input type="hidden" name="no_sentences" value="{{ no_sentences }}">
+            <input type="hidden" name="format_type" value="{{ format_type }}">
+            <button type="submit">Update Summary</button>
+          </div>
+        </form>
+      </div>
+      {% endif %}
+    </div>
+  </body>
+</html>
